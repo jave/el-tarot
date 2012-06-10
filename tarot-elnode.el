@@ -11,16 +11,12 @@
        (let ((card (random-aref tarot-deck)))
          (format 
           "<html><body><h1>%s</h1>
-<img \"static/jave_tarot/%s.svg\">
-</body></html>"   card  (aref (car card) 0)))))
-
-(defconst tarot-elnode-static-handler
-  (elnode-webserver-handler-maker "/home/joakim/current/git/el-tarot/")
-)
+<img src=\"/tarot-static/jave_tarot/%s.svg\">
+</body></html>"   (aref (car card) 0)  (aref (car card) 0)))))
 
 (defconst tarot-elnode-urls
-  `(("^$" . tarot-elnode-handler)
-    ("/tarot-static/.*" . tarot-elnode-static-handler)))
+  `(("tarot/$" . tarot-elnode-handler)
+    ("tarot-static/\\(.*\\)$" . ,  (elnode-webserver-handler-maker "/home/joakim/current/git/el-tarot/"))))
 
 (defun tarot-elnode-dispatcher-handler (httpcon)
   (elnode-dispatcher httpcon tarot-elnode-urls))
@@ -30,4 +26,4 @@
 ;(elnode-start  (elnode-webserver-handler-maker "/home/joakim/current/git/el-tarot") :port 8041 :host "localhost") 
 ;(elnode-start 'tarot-elnode-dispatcher-handler :port 8031 :host "localhost")
 
-;; http://localhost:8029
+;; http://localhost:8031/tarot

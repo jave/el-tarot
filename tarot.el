@@ -228,7 +228,7 @@
       ))
   )
 
-;;;;
+;;;; download tarot images from wikipedia
 
 
 (defun tarot-get-images ()
@@ -249,4 +249,6 @@ Assumes headers are indeed present!"
     (search-forward "\n\n")
     (delete-region (point-min) (point))
     buffer))
+
+(provide 'tarot)
 ;;; tarot.el ends here

@@ -4,19 +4,27 @@
 (tarot-choose-deck "javetarot")
 
 (defun tarot-elnode-handler (httpcon)
-  "elnode hanlder that shows a random tarot card"
+  "elnode handler that shows a random tarot card"
    (elnode-http-start httpcon 200 '("Content-Type" . "text/html"))
    (elnode-http-return 
        httpcon
-       (let ((card (random-aref tarot-deck)))
+       (let* ((card (random-aref tarot-deck))
+              (title (aref (car card) 0))
+              (info-url (aref (car card) 2)))
+         
          (format 
-          "<html><body><h1>%s</h1>
-<img src=\"/tarot-static/jave_tarot/%s.svg\">
-</body></html>"   (aref (car card) 0)  (aref (car card) 0)))))
+          "<html><body>
+<a href=\"%s\"> <img alt=\"%s\" src=\"/tarot-static/jave_tarot/%s.svg\"> </a>
+</body></html>"   info-url title title))))
 
 (defconst tarot-elnode-urls
   `(("tarot/$" . tarot-elnode-handler)
-    ("tarot-static/\\(.*\\)$" . ,  (elnode-webserver-handler-maker "/home/joakim/current/git/el-tarot/"))))
+    ("tarot-static/\\(.*\\)$" . ,  (elnode-webserver-handler-maker
+                                    (file-name-directory
+                  (buffer-file-name 
+                   (car
+                    (save-excursion 
+                      (find-definition-noselect 'tarot-elnode-handler nil)))))))))
 
 (defun tarot-elnode-dispatcher-handler (httpcon)
   (elnode-dispatcher httpcon tarot-elnode-urls))
